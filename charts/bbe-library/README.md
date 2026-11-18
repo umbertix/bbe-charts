@@ -36,7 +36,7 @@ A book library for the BBE cluster, with Calibre-Web-Automated to read and manag
 | bbe.library.shelfmark.irc.port | int | `6697` | The IRC server's TLS port |
 | bbe.library.shelfmark.irc.searchBot | string | `""` | The search bot to ask, such as `search` |
 | bbe.library.shelfmark.irc.server | string | `""` | The IRC server, such as `irc.example.net` |
-| bbe.library.shelfmark.requests | bool | `true` | Whether people ask for books for an admin to approve, rather than downloading them. Admins always download |
+| bbe.library.shelfmark.requests | bool | `true` | Whether people ask for books and audiobooks for an admin to approve, rather than downloading them. Admins always download |
 | bbe.library.shelfmark.resources.limits.memory | string | `"512Mi"` | The memory to limit Shelfmark to |
 | bbe.library.shelfmark.resources.requests.cpu | string | `"20m"` | The CPU to request for Shelfmark |
 | bbe.library.shelfmark.resources.requests.memory | string | `"128Mi"` | The memory to request for Shelfmark |

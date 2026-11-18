@@ -136,6 +136,8 @@ spec:
             {{- if $shelfmark.requests }}
             - name: REQUEST_POLICY_DEFAULT_EBOOK
               value: request_release
+            - name: REQUEST_POLICY_DEFAULT_AUDIOBOOK
+              value: request_release
             {{- end }}
             # Where books go, which Calibre-Web-Automated adds and empties. Hardlinks and folders don't suit it
             - name: INGEST_DIR
