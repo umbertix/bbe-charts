@@ -291,17 +291,25 @@ def configure_music_assistant_address(music_assistant):
     log(f"Music Assistant: its address is {wanted}")
 
 
-def music_assistant_has_folder(music_assistant, path):
-    """Whether a local files provider already plays the folder. The path is looked for anywhere in their settings, as
-    their shape differs between versions"""
+def music_assistant_music_providers(music_assistant):
+    """The local files providers holding music. Music Assistant keeps the folder each one plays to itself, encrypted in
+    its setup data, which no command answers with, so they're told apart by what they hold instead. Its only media is
+    the share, so a music one plays the music on it. A disabled one doesn't say what it holds and counts too, as it may
+    be the music turned off on purpose"""
     configs = music_assistant.command("config/providers", provider_domain="filesystem_local", include_values=True)
-    return any(path in json.dumps(config) for config in configs or [])
+    providers = []
+    for config in configs or []:
+        content_type = ((config.get("values") or {}).get("content_type") or {}).get("value")
+        if content_type in ("music", None):
+            providers.append(config["instance_id"])
+    return providers
 
 
 def configure_music_assistant_folders(music_assistant):
-    """A local files provider for the music, which Lidarr and SoulSync both write to, with SoulSync's playlists. Best
-    effort: Music Assistant imports in the background, and a provider it didn't take is left to add in its settings"""
-    if music_assistant_has_folder(music_assistant, MUSIC_DIR):
+    """A local files provider for the music, which Lidarr and SoulSync both write to, with SoulSync's playlists, unless
+    one is there already. Best effort: Music Assistant imports in the background, and a provider it didn't take is left
+    to add in its settings"""
+    if music_assistant_music_providers(music_assistant):
         return
     step = music_assistant.command("config/providers/setup", provider_domain="filesystem_local")
     flow_id = (step or {}).get("flow_id")
