@@ -19,6 +19,7 @@ tests:
       - equal:
           path: data
           value:
+            AUTOBRR__HOST: 0.0.0.0
             AUTOBRR__CHECK_FOR_UPDATES: "false"
             AUTOBRR__OIDC_ENABLED: "true"
             AUTOBRR__OIDC_ISSUER: https://auth.lab.home.arpa/application/o/autobrr/
@@ -37,6 +38,7 @@ tests:
       - equal:
           path: data
           value:
+            AUTOBRR__HOST: 0.0.0.0
             AUTOBRR__CHECK_FOR_UPDATES: "false"
 
   - it: should copy autobrr's OIDC client secret from bbe-auth

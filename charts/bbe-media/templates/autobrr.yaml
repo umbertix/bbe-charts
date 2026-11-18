@@ -12,6 +12,9 @@ metadata:
   labels:
     {{- include "bbe-media.labels" . | nindent 4 }}
 data:
+  # Every address, for Traefik and the setup. autobrr writes the address of its first start into its config.toml, which
+  # is the init container's 127.0.0.1
+  AUTOBRR__HOST: 0.0.0.0
   # bbe upgrades it
   AUTOBRR__CHECK_FOR_UPDATES: "false"
   {{- if .Values.global.bbe.sso.enabled }}
