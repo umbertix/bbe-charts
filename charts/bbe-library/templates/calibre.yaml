@@ -65,7 +65,9 @@ spec:
       initContainers:
         # Calibre-Web serves HTTPS once its settings name a certificate and its key, which it reads when it starts. So
         # they're set before it starts, in its database. On a first install the database is created first, as CWA's
-        # own start would
+        # own start would.
+        # Its sign-in form stays on too, as the library's own admin, which bbe's setup signs in with, isn't in authentik.
+        # Ticking "Disable standard login" in its settings would lock the setup out, so it's turned off again here
         - name: https
           image: "{{ .Values.bbe.library.calibre.image.repository }}:{{ .Values.bbe.library.calibre.image.tag }}"
           command:
@@ -78,6 +80,7 @@ spec:
                 /lsiopy/bin/python3 cps.py -d
               fi
               sqlite3 /config/app.db "UPDATE settings SET config_certfile = '/certificates/tls.crt', config_keyfile = '/certificates/tls.key'"
+              sqlite3 /config/app.db "UPDATE settings SET config_disable_standard_login = 0"
           env:
             - name: CALIBRE_DBPATH
               value: /config
