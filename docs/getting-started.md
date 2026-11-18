@@ -185,7 +185,7 @@ Everyone then uses that one username and password everywhere: in the browser, in
 - **E-readers:**
   - **OPDS apps** (KOReader, Moon+ Reader, …): use `https://calibre.bbe.home.arpa/opds`, with your authentik username and password.
   - **Kobo devices:** make a sync link under your profile.
-- **Finding books:** at `https://shelfmark.bbe.home.arpa`. Downloads land in the library by themselves.
+- **Finding books:** at `https://shelfmark.bbe.home.arpa`. Downloads land in the library by themselves. People in `users` ask for books, and someone in `admins` approves them in Shelfmark; admins download straight away. To let everyone download, set `bbe.library.shelfmark.requests: false` under the `bbe-library` package's values in `~/.bbe/bbe.yaml`, and run `bbe upgrade`.
 
 ## 8. Music
 

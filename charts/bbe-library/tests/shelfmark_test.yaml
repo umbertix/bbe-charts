@@ -43,6 +43,42 @@ tests:
                 name: bbe-library-auth
                 key: shelfmark-client-secret
 
+  - it: should have people ask for books for an admin to approve, by default
+    template: shelfmark.yaml
+    documentSelector:
+      path: kind
+      value: Deployment
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: REQUESTS_ENABLED
+            value: "true"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: REQUEST_POLICY_DEFAULT_EBOOK
+            value: request_release
+
+  - it: should let everyone download when requests are off
+    template: shelfmark.yaml
+    documentSelector:
+      path: kind
+      value: Deployment
+    set:
+      bbe.library.shelfmark.requests: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: REQUESTS_ENABLED
+            value: "false"
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          any: true
+          content:
+            name: REQUEST_POLICY_DEFAULT_EBOOK
+
   - it: should run as the NAS user, writing books to the ingest folder
     template: shelfmark.yaml
     documentSelector:
