@@ -133,10 +133,10 @@ bbe:
   trust:
     # The image of the hook waiting for trust-manager's webhook before bbe's bundles are created
     waitImage:
-      # -- The image the wait runs on, which only needs `nc`
-      repository: busybox
+      # -- The image the wait runs on, which only needs Python
+      repository: python
       # -- The tag of the wait's image
-      tag: "1.37.0"
+      tag: "3.13-alpine"
 
 metallb:
   crds:
