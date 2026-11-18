@@ -70,6 +70,7 @@ A music library for the BBE cluster, with Lidarr to find albums, slskd for Souls
 | global.bbe.vpn.secret | string | `"bbe-vpn"` | bbe-media's Secret with a WireGuard private key for each app, which bbe-music copies slskd's from |
 | global.bbe.vpn.serverCountries | string | `""` | The countries of the servers to use, comma-separated, or any with port forwarding when empty |
 | global.bbe.vpn.serviceSubnet | string | `"10.96.0.0/12"` | The cluster's Service network, reachable outside the tunnel |
+| lidarr.config.size | string | `"10Gi"` |  |
 | lidarr.lidarr.env[0].name | string | `"LIDARR__AUTH__APIKEY"` |  |
 | lidarr.lidarr.env[0].valueFrom.secretKeyRef.key | string | `"lidarr"` |  |
 | lidarr.lidarr.env[0].valueFrom.secretKeyRef.name | string | `"bbe-music-api-keys"` |  |

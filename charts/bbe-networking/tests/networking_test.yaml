@@ -351,7 +351,21 @@ tests:
         documentIndex: 0
       - matchRegex:
           path: spec.template.spec.containers[0].command[2]
-          pattern: nc -z -w 5 trust-manager\.bbe-networking\.svc 443
+          pattern: host = "trust-manager\.bbe-networking\.svc"
+        documentIndex: 0
+      # Checked against the certificate Helm issues the webhook in this release, as the trust-manager being replaced
+      # still answers with the old one
+      - matchRegex:
+          path: spec.template.spec.containers[0].command[2]
+          pattern: ssl\.create_default_context\(cafile="/tls/ca\.crt"\)
+        documentIndex: 0
+      - equal:
+          path: spec.template.spec.volumes[0].secret
+          value:
+            secretName: trust-manager-tls
+            items:
+              - key: ca.crt
+                path: ca.crt
         documentIndex: 0
       - equal:
           path: metadata.annotations["helm.sh/hook-weight"]

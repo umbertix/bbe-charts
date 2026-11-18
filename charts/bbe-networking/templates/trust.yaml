@@ -3,6 +3,11 @@ trust-manager copies bbe's certificate authority into every namespace, for the a
 with inside the cluster. The bundles are hooks after bbe's certificate authority (weight 10), as trust-manager's webhook
 checks them and doesn't answer yet when the chart's own resources are created. Recreating them on upgrades has
 trust-manager write their targets again within seconds, while the apps already running keep the copy they read.
+
+Helm issues trust-manager's webhook a new certificate on every upgrade, and its webhook configuration trusts only the
+new one straight away, while the trust-manager being replaced still answers with the old one. The wait checks the
+certificate trust-manager answers with against the new one, a few times in a row, so the bundles aren't sent to the
+trust-manager being replaced, which would refuse them after Helm has deleted the old ones.
 */}}
 apiVersion: batch/v1
 kind: Job
@@ -36,22 +41,55 @@ spec:
         # The webhook's Service only sends connections to a trust-manager that's ready
         - name: wait
           image: "{{ .Values.bbe.trust.waitImage.repository }}:{{ .Values.bbe.trust.waitImage.tag }}"
+          env:
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
           command:
-            - sh
+            - python
             - -c
-            - until nc -z -w 5 trust-manager.{{ .Release.Namespace }}.svc 443; do sleep 2; done
+            - |
+              import socket, ssl, time
+
+              host = "trust-manager.{{ .Release.Namespace }}.svc"
+              # The certificate authority Helm issued the webhook's certificate with in this release
+              context = ssl.create_default_context(cafile="/tls/ca.crt")
+              # The Service can still send some connections to the trust-manager being replaced right after the new
+              # one is ready
+              streak = 0
+              while streak < 5:
+                  try:
+                      with socket.create_connection((host, 443), timeout=5) as connection:
+                          with context.wrap_socket(connection, server_hostname=host):
+                              streak += 1
+                  except OSError as error:
+                      streak = 0
+                      print(f"trust-manager doesn't answer with this release's certificate yet: {error}", flush=True)
+                  time.sleep(2)
+              print("trust-manager answers with this release's certificate", flush=True)
+          volumeMounts:
+            - name: tls
+              mountPath: /tls
+              readOnly: true
           resources:
             requests:
-              memory: 8Mi
+              memory: 16Mi
               cpu: 10m
             limits:
-              memory: 32Mi
+              memory: 64Mi
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
               drop:
                 - ALL
+      volumes:
+        # trust-manager's webhook certificate, which Helm writes along with the webhook configuration trusting it
+        - name: tls
+          secret:
+            secretName: trust-manager-tls
+            items:
+              - key: ca.crt
+                path: ca.crt
 ---
 # Only bbe's certificate authority, for checking the apps' certificates inside the cluster. A Secret, as Traefik's
 # forward auth only reads its certificate authority from one

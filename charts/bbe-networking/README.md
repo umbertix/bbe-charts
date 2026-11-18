@@ -34,8 +34,8 @@ A collection of charts for BBE cluster networking
 | bbe.dashboard.settings | string | `"title: bbe\nheaderStyle: clean\nlayout:\n  Watch:\n    style: row\n    columns: 4\n  Read:\n    style: row\n    columns: 4\n  Listen:\n    style: row\n    columns: 4\n  Keep:\n    style: row\n    columns: 4\n  Manage:\n    style: row\n    columns: 4\n  Cluster:\n    style: row\n    columns: 4\n"` | Homepage's settings.yaml, see https://gethomepage.dev/configs/settings. Its layout orders the groups the apps' annotations put them in, so it's kept as text, as Helm would sort the groups by name |
 | bbe.dashboard.widgets | list | `[]` | Homepage's widgets.yaml. Its Kubernetes widgets need metrics-server, which Talos doesn't run by default |
 | bbe.metallb.blocky.ipAddressPool | string | `nil` | The IP address for the Blocky DNS service, or a range such as 192.168.1.240-192.168.1.245 |
-| bbe.trust.waitImage.repository | string | `"busybox"` | The image the wait runs on, which only needs `nc` |
-| bbe.trust.waitImage.tag | string | `"1.37.0"` | The tag of the wait's image |
+| bbe.trust.waitImage.repository | string | `"python"` | The image the wait runs on, which only needs Python |
+| bbe.trust.waitImage.tag | string | `"3.13-alpine"` | The tag of the wait's image |
 | blocky.blocky.resources.limits.memory | string | `"384Mi"` |  |
 | blocky.blocky.resources.requests.memory | string | `"160Mi"` |  |
 | blocky.config.yaml | string | `"{{- include \"bbe-networking.blockyConfig\" . }}\n"` |  |
