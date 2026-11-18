@@ -107,6 +107,10 @@ tests:
       - matchRegex:
           path: spec.template.spec.initContainers[0].command[2]
           pattern: "UPDATE settings SET config_certfile = '/certificates/tls.crt', config_keyfile = '/certificates/tls.key'"
+      # The library's admin, which the setup signs in with, only has the sign-in form
+      - matchRegex:
+          path: spec.template.spec.initContainers[0].command[2]
+          pattern: "UPDATE settings SET config_disable_standard_login = 0"
       - equal:
           path: spec.template.spec.initContainers[0].securityContext.runAsUser
           value: 1031
