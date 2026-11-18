@@ -57,7 +57,7 @@ bbe:
       # -- The size of its config volume, with its settings, users and cover cache
       configSize: 1Gi
       # -- Whether people ask for books for an admin to approve, rather than downloading them. Admins always download
-      requests: false
+      requests: true
       # -- A Hardcover API key, for Hardcover's book details rather than Open Library's. Open Library needs no key
       hardcoverApiKey: ""
       # Shelfmark's direct download sources, which it ships without addresses for. A source is used once it has a
