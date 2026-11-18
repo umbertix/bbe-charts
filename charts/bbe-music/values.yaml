@@ -177,5 +177,8 @@ lidarr:
           configMapKeyRef:
             name: bbe-music-user
             key: PGID
+  # Its settings, database and artwork cache. The cache grows with the library and outgrew the chart's 1Gi
+  config:
+    size: 10Gi
   media:
     existingClaim: bbe-music-share
